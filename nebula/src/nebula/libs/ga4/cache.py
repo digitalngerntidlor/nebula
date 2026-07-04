@@ -28,12 +28,12 @@ WITH monthly_counts AS (
 SELECT
     year_str,
     month_str,
-    MAX(CASE WHEN site = 'heygoody' AND segment = 'article' THEN active_users END) AS active_users_article_heygoody,
-    MAX(CASE WHEN site = 'heygoody' AND segment = 'product' THEN active_users END) AS active_users_product_heygoody,
-    MAX(CASE WHEN site = 'tidlor'   AND segment = 'article' THEN active_users END) AS active_users_article_tidlor,
-    MAX(CASE WHEN site = 'tidlor'   AND segment = 'product' THEN active_users END) AS active_users_product_tidlor,
-    MAX(CASE WHEN site = 'tidloh'   AND segment = 'article' THEN active_users END) AS active_users_article_tidloh,
-    MAX(CASE WHEN site = 'tidloh'   AND segment = 'product' THEN active_users END) AS active_users_product_tidloh
+    COALESCE(MAX(CASE WHEN site = 'heygoody' AND segment = 'article' THEN active_users END), 0) AS active_users_article_heygoody,
+    COALESCE(MAX(CASE WHEN site = 'heygoody' AND segment = 'product' THEN active_users END), 0) AS active_users_product_heygoody,
+    COALESCE(MAX(CASE WHEN site = 'tidlor'   AND segment = 'article' THEN active_users END), 0) AS active_users_article_tidlor,
+    COALESCE(MAX(CASE WHEN site = 'tidlor'   AND segment = 'product' THEN active_users END), 0) AS active_users_product_tidlor,
+    COALESCE(MAX(CASE WHEN site = 'tidloh'   AND segment = 'article' THEN active_users END), 0) AS active_users_article_tidloh,
+    COALESCE(MAX(CASE WHEN site = 'tidloh'   AND segment = 'product' THEN active_users END), 0) AS active_users_product_tidloh
 FROM monthly_counts
 GROUP BY year_str, month_str
 ORDER BY year_str, month_str

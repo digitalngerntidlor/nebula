@@ -91,7 +91,7 @@ def test_run_traffic_conversion_merge_sends_pivoted_struct_rows():
     assert struct_values["year_str"] == "2026"
     assert struct_values["month_str"] == "07"
     assert struct_values["active_users_article_heygoody"] == 2
-    assert struct_values["active_users_product_heygoody"] is None
+    assert struct_values["active_users_product_heygoody"] == 0
 
 
 def test_run_traffic_conversion_merge_no_op_when_no_cached_rows():

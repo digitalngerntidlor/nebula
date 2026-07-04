@@ -76,9 +76,9 @@ def test_compute_month_aggregates_pivots_distinct_counts_per_site_segment():
             "active_users_article_heygoody": 2,
             "active_users_product_heygoody": 1,
             "active_users_article_tidlor": 1,
-            "active_users_product_tidlor": None,
-            "active_users_article_tidloh": None,
-            "active_users_product_tidloh": None,
+            "active_users_product_tidlor": 0,
+            "active_users_article_tidloh": 0,
+            "active_users_product_tidloh": 0,
         }
     ]
 

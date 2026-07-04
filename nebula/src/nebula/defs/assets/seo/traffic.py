@@ -42,3 +42,16 @@ def traffic_and_conversion_cache(
     with bigquery.get_client() as client, duckdb.get_connection() as conn:
         metadata = run_traffic_conversion_merge(client, conn)
     return dg.MaterializeResult(metadata=metadata)
+
+
+ga4_daily_refresh_job = dg.define_asset_job(
+    "ga4_daily_refresh_job",
+    selection=[ga4_active_users, traffic_and_conversion_cache],
+)
+
+ga4_daily_schedule = dg.ScheduleDefinition(
+    name="ga4_daily_refresh_schedule",
+    job=ga4_daily_refresh_job,
+    cron_schedule="0 2 * * *",
+    execution_timezone="Asia/Bangkok",
+)
