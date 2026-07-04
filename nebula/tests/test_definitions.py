@@ -1,3 +1,5 @@
+import dagster as dg
+
 from nebula.definitions import defs
 
 
@@ -10,5 +12,10 @@ def test_defs_loads_ga4_assets():
 
 def test_defs_loads_daily_schedule():
     definitions = defs()
-    schedule_names = {schedule.name for schedule in definitions.schedules}
-    assert "ga4_daily_refresh_schedule" in schedule_names
+    schedules_by_name = {schedule.name: schedule for schedule in definitions.schedules}
+    schedule = schedules_by_name["ga4_daily_refresh_schedule"]
+
+    assert schedule.default_status == dg.DefaultScheduleStatus.STOPPED
+    assert schedule.cron_schedule == "0 2 * * *"
+    assert schedule.execution_timezone == "Asia/Bangkok"
+    assert schedule.job_name == "ga4_daily_refresh_job"

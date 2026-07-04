@@ -49,7 +49,7 @@ ga4_daily_refresh_job = dg.define_asset_job(
     selection=[ga4_active_users, traffic_and_conversion_cache],
 )
 
-ga4_daily_schedule = dg.ScheduleDefinition(
+ga4_daily_refresh_schedule = dg.ScheduleDefinition(
     name="ga4_daily_refresh_schedule",
     job=ga4_daily_refresh_job,
     cron_schedule="0 2 * * *",
