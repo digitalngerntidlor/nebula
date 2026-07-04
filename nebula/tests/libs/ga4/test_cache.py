@@ -1,6 +1,7 @@
 from datetime import date
 
 import duckdb
+import pytest
 
 from nebula.libs.ga4.cache import compute_month_aggregates, refresh_active_users
 
@@ -80,3 +81,29 @@ def test_compute_month_aggregates_pivots_distinct_counts_per_site_segment():
             "active_users_product_tidloh": None,
         }
     ]
+
+
+def test_refresh_active_users_rolls_back_on_constraint_violation():
+    conn = _connection()
+    refresh_active_users(
+        conn,
+        date(2026, 7, 1),
+        date(2026, 7, 1),
+        [(date(2026, 7, 1), "heygoody", "article", "existing-user")],
+    )
+
+    with pytest.raises(duckdb.Error):
+        refresh_active_users(
+            conn,
+            date(2026, 7, 1),
+            date(2026, 7, 1),
+            [
+                (date(2026, 7, 1), "heygoody", "article", "dup-user"),
+                (date(2026, 7, 1), "heygoody", "article", "dup-user"),
+            ],
+        )
+
+    rows = conn.execute(
+        "SELECT event_date, site, segment, user_pseudo_id FROM ga4_active_users"
+    ).fetchall()
+    assert rows == [(date(2026, 7, 1), "heygoody", "article", "existing-user")]
