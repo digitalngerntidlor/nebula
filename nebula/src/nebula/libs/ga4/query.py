@@ -1,6 +1,6 @@
 """Query builders for the GA4 active-user DuckDB cache."""
 
-ACTIVE_USERS_QUERY = r"""
+ACTIVE_SEO_USERS_QUERY = r"""
 SELECT DISTINCT
   PARSE_DATE('%Y%m%d', event_date) AS event_date,
   'heygoody' AS site,
@@ -162,8 +162,8 @@ WHEN NOT MATCHED THEN INSERT (
 """
 
 
-def build_active_users_query() -> str:
-    return ACTIVE_USERS_QUERY
+def build_ACTIVE_SEO_USERS_QUERY() -> str:
+    return ACTIVE_SEO_USERS_QUERY
 
 
 def build_merge_query() -> str:

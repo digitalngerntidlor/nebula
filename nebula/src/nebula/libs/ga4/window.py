@@ -2,7 +2,7 @@
 
 from datetime import date, timedelta
 
-BACKFILL_START_DATE = date(2026, 1, 1)
+BACKFILL_START_DATE = date(2026, 7, 3)
 TRAILING_WINDOW_DAYS = 4
 
 

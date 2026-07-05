@@ -6,31 +6,31 @@ from typing import Any
 import duckdb
 from google.cloud import bigquery
 
-from nebula.libs.ga4.cache import compute_month_aggregates, refresh_active_users
-from nebula.libs.ga4.query import build_active_users_query, build_merge_query
+from nebula.libs.ga4.cache import compute_month_aggregates, refresh_seo_active_users
+from nebula.libs.ga4.query import build_ACTIVE_SEO_USERS_QUERY, build_merge_query
 from nebula.libs.ga4.window import compute_window
 
 
-def run_active_users_refresh(
+def run_seo_active_users_refresh(
     client: bigquery.Client,
     conn: duckdb.DuckDBPyConnection,
-    today: date,
-    backfill: bool = False,
+    start_date: str,
+    end_date: str,
 ) -> dict[str, Any]:
-    start_date, end_date = compute_window(today, backfill=backfill)
 
     job_config = bigquery.QueryJobConfig(
         query_parameters=[
-            bigquery.ScalarQueryParameter("suffix_start", "STRING", start_date.strftime("%Y%m%d")),
-            bigquery.ScalarQueryParameter("suffix_end", "STRING", end_date.strftime("%Y%m%d")),
+            bigquery.ScalarQueryParameter("suffix_start", "STRING", start_date.replace("-", "")),
+            bigquery.ScalarQueryParameter("suffix_end", "STRING", end_date.replace("-", "")),
         ]
     )
-    query_job = client.query(build_active_users_query(), job_config=job_config)
+    print(build_ACTIVE_SEO_USERS_QUERY())
+    query_job = client.query(build_ACTIVE_SEO_USERS_QUERY(), job_config=job_config)
     rows = [
         (row.event_date, row.site, row.segment, row.user_pseudo_id) for row in query_job.result()
     ]
 
-    refresh_active_users(conn, start_date, end_date, rows)
+    refresh_seo_active_users(conn, start_date, end_date, rows)
 
     return {
         "start_date": str(start_date),
@@ -39,7 +39,7 @@ def run_active_users_refresh(
     }
 
 
-def run_traffic_conversion_merge(
+def run_seo_traffic_conversion_merge(
     client: bigquery.Client,
     conn: duckdb.DuckDBPyConnection,
 ) -> dict[str, Any]:

@@ -10,6 +10,6 @@ def resources():
     return dg.Definitions(
         resources={
             "duckdb": DuckDBResource(database=dg.EnvVar("DUCKDB_PATH")),
-            "bigquery": BigQueryResource(project="heygoody-450609"),
+            "bigquery": BigQueryResource(gcp_credentials=dg.EnvVar("GCP_SA_KEY_B64")),
         }
     )

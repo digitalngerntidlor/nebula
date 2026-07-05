@@ -5,7 +5,7 @@ from datetime import date
 import duckdb
 
 CREATE_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS ga4_active_users (
+CREATE TABLE IF NOT EXISTS ga4_active_seo_users (
     event_date DATE NOT NULL,
     site VARCHAR NOT NULL,
     segment VARCHAR NOT NULL,
@@ -22,7 +22,7 @@ WITH monthly_counts AS (
         site,
         segment,
         COUNT(DISTINCT user_pseudo_id) AS active_users
-    FROM ga4_active_users
+    FROM ga4_active_seo_users
     GROUP BY 1, 2, 3, 4
 )
 SELECT
@@ -44,7 +44,7 @@ def ensure_schema(conn: duckdb.DuckDBPyConnection) -> None:
     conn.execute(CREATE_TABLE_SQL)
 
 
-def refresh_active_users(
+def refresh_seo_active_users(
     conn: duckdb.DuckDBPyConnection,
     start_date: date,
     end_date: date,
@@ -54,12 +54,12 @@ def refresh_active_users(
     conn.execute("BEGIN TRANSACTION")
     try:
         conn.execute(
-            "DELETE FROM ga4_active_users WHERE event_date BETWEEN ? AND ?",
+            "DELETE FROM ga4_active_seo_users WHERE event_date BETWEEN ? AND ?",
             [start_date, end_date],
         )
         if rows:
             conn.executemany(
-                "INSERT INTO ga4_active_users VALUES (?, ?, ?, ?)",
+                "INSERT INTO ga4_active_seo_users VALUES (?, ?, ?, ?)",
                 rows,
             )
     except Exception:
