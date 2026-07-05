@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#Service account
+gbq_service_account*
+
+#Claude
+docs/superpowers/*
+
+#Dagster
+.tmp_dagster_home*
+sa_key_b64.txt
+nebula/tests/
